@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <h1>PNR Status</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Check Status</button>
+    </form>
+
+    {% if ticket %}
+    <h2>Ticket Details</h2>
+    <p>{{ticket.PNR_no}}</p>
+    <p>{{ticket.train}}</p>
+    <p>{{ticket.train_class}}</p>
+    <p>{{ticket.from_station}}</p>
+    <p>{{ticket.to_station}}</p>
+    <p>{{ticket.from_date}}</p>
+    <p>{{ticket.total_fare}}</p>
+    <p>{{ticket.passenger_name}}</p>
+    <p>{{ticket.passenger_age}}</p>
+    <p>{{ticket.passenger_sex}}</p>
+    <p>{{ticket.ticket_status}}</p>
+    <a href="{% url 'cancel_ticket' ticket.PNR_no %}" class="btn btn-danger">Cancel Ticket</a>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,62 @@
+<html>
+<head>
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type='submit' id="search-button">Search</button>
+    </form>
+
+    <div id="matching-trains-section">
+        {% if matching_trains %}
+        <h2>Matching Trains:</h2>
+        <ul>
+            {% for train in matching_trains %}
+            <li>
+                <strong>{{ train.train_name }} - {{ train.train_code }}</strong>
+                <form id="booking-form" method="GET">
+                    <input type="hidden" name="from_station" value="{{ from_station_code }}">
+                    <input type="hidden" name="to_station" value="{{ to_station_code }}">
+                    <input type="hidden" name="date_of_journey" value="{{ date_of_journey|stringformat:'s' }}">
+                    <input type="hidden" name="train" value="{{ train.train_code }}">
+
+                    <ul>
+                        {% for seat_data in seat_availability_data %}
+                        {% if seat_data.train == train %}
+                        <li style="list-style-type: none">
+                            <label for="class_{{ seat_data.train_class.class_code }}">{{ seat_data.train_class.class_code }}</label>
+                            <br>
+                            Available Seats: {{ seat_data.available_seats }}
+                            {% for fare_item in fare_data %}
+                            {% if fare_item.train == train and fare_item.train_class == seat_data.train_class %}
+                            <input type="hidden" name="fare" value="{{fare_item.fare}}">
+                            <br /> Fare Amount: {{ fare_item.fare }}
+                            {% endif %}
+                            {% endfor %}
+                            {% if seat_data.train_class.class_code %}
+                            <button type="submit" class="book-button" formaction="{% url 'book_seat' train.train_code seat_data.train_class.class_code %}">Book Now</button>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
+                        </li>
+                    </ul>
+                </form>
+                {% endfor %}
+        </ul>
+        {% else %}
+        <p>No matching trains found.</p>
+        {% endif %}
+    </div>
+    <script>
+        $("#id_from_station").select2();
+        $("#id_to_station").select2();
+
+    </script>
+
+</body>
+</html>

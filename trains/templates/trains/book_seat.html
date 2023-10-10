@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Seat</title>
+</head>
+<body>
+    <h1>Book Seat</h1>
+
+    <h2>Journey Details</h2>
+    <p>Train Name: {{ train.train_name }}</p>
+    <p>Train Code: {{ train.train_code }}</p>
+    <p>From Station: {{ from_station.station_name }}</p>
+    <p>To Station: {{ to_station.station_name }}</p>
+    <p>Date of Journey: {{ date_of_journey }}</p>
+    <p>Selected Class: {{ selected_class }}</p>
+    <p>Fare : {{fare}}</p>
+    <h2>Book Seat Form</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <!-- Include form fields here -->
+        <!-- For example, passenger name, age, and gender fields -->
+        {{form.as_p}}
+
+        <!-- Add more form fields as needed -->
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
